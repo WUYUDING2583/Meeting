@@ -31,12 +31,29 @@ allprojects {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
             url "$rootDir/../node_modules/react-native/android"
         }
- 
+ // 下面是添加的代码
+        maven {
+            url "http://maven.aliyun.com/nexus/content/repositories/releases/"
+        }
+        flatDir {
+            dirs project(':react-native-aliyun-push').file('libs')
+        }
+        // 添加结束
         maven{
             url "https://maven.google.com"
         }
         maven{url "https://jitpack.io"}
        
+    }
+}
+subprojects {
+    project.configurations.all {
+        resolutionStrategy.eachDependency { details ->
+            if (details.requested.group == 'com.android.support'
+                    && !details.requested.name.contains('multidex') ) {
+                details.useVersion '28.0.0'//改这个版本号到你想要的版本
+            }
+        }
     }
 }
 

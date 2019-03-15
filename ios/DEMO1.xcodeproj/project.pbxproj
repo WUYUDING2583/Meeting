@@ -65,6 +65,9 @@
 		D17DF569770E441A94B3AA19 /* libRNReactNativeLocalBarcodeRecognizer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 782D8C44B8134430B707A78F /* libRNReactNativeLocalBarcodeRecognizer.a */; };
 		A2451FC62E114E96B344FBCC /* libRNViewShot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 802B53167CC1411C9CCDD163 /* libRNViewShot.a */; };
 		5A986B73D2A640D3B6FECE2D /* libRNSpinkit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E72BD8E4C184B139CBCFC75 /* libRNSpinkit.a */; };
+		076F2935D7BA4D0CB70C50D6 /* libRCTJCoreModule.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D28D50BDA9CD4F18822A1ECF /* libRCTJCoreModule.a */; };
+		ED235C2BF11E414B803996CB /* libRCTAliyunPush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 319C9382C5B74C9B93A91AB4 /* libRCTAliyunPush.a */; };
+		88F412C9CD3E4FD6A5DD59F1 /* libRNSpeechIFlytek.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F94626C77C03461ABA7E490D /* libRNSpeechIFlytek.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -407,6 +410,12 @@
 		802B53167CC1411C9CCDD163 /* libRNViewShot.a */ = {isa = PBXFileReference; name = "libRNViewShot.a"; path = "libRNViewShot.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		C8C704C2605F41DD91F40B22 /* RNSpinkit.xcodeproj */ = {isa = PBXFileReference; name = "RNSpinkit.xcodeproj"; path = "../node_modules/react-native-spinkit/ios/RNSpinkit.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		0E72BD8E4C184B139CBCFC75 /* libRNSpinkit.a */ = {isa = PBXFileReference; name = "libRNSpinkit.a"; path = "libRNSpinkit.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		ACC3E772A76043B58DF19E91 /* RCTJCoreModule.xcodeproj */ = {isa = PBXFileReference; name = "RCTJCoreModule.xcodeproj"; path = "../node_modules/jcore-react-native/ios/RCTJCoreModule.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		D28D50BDA9CD4F18822A1ECF /* libRCTJCoreModule.a */ = {isa = PBXFileReference; name = "libRCTJCoreModule.a"; path = "libRCTJCoreModule.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		A9BEFF1DAA694AA7B76169ED /* RCTAliyunPush.xcodeproj */ = {isa = PBXFileReference; name = "RCTAliyunPush.xcodeproj"; path = "../node_modules/react-native-aliyun-push/ios/RCTAliyunPush.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		319C9382C5B74C9B93A91AB4 /* libRCTAliyunPush.a */ = {isa = PBXFileReference; name = "libRCTAliyunPush.a"; path = "libRCTAliyunPush.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		481C0A4AAE7B459CA6A8BDD4 /* RNSpeechIFlytek.xcodeproj */ = {isa = PBXFileReference; name = "RNSpeechIFlytek.xcodeproj"; path = "../node_modules/react-native-speech-iflytek/ios/RNSpeechIFlytek.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		F94626C77C03461ABA7E490D /* libRNSpeechIFlytek.a */ = {isa = PBXFileReference; name = "libRNSpeechIFlytek.a"; path = "libRNSpeechIFlytek.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -444,6 +453,9 @@
 				D17DF569770E441A94B3AA19 /* libRNReactNativeLocalBarcodeRecognizer.a in Frameworks */,
 				A2451FC62E114E96B344FBCC /* libRNViewShot.a in Frameworks */,
 				5A986B73D2A640D3B6FECE2D /* libRNSpinkit.a in Frameworks */,
+				076F2935D7BA4D0CB70C50D6 /* libRCTJCoreModule.a in Frameworks */,
+				ED235C2BF11E414B803996CB /* libRCTAliyunPush.a in Frameworks */,
+				88F412C9CD3E4FD6A5DD59F1 /* libRNSpeechIFlytek.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -644,6 +656,9 @@
 				6AED543391954A72B9AA0BD2 /* RNReactNativeLocalBarcodeRecognizer.xcodeproj */,
 				263233D482F74257BBB2D98D /* RNViewShot.xcodeproj */,
 				C8C704C2605F41DD91F40B22 /* RNSpinkit.xcodeproj */,
+				ACC3E772A76043B58DF19E91 /* RCTJCoreModule.xcodeproj */,
+				A9BEFF1DAA694AA7B76169ED /* RCTAliyunPush.xcodeproj */,
+				481C0A4AAE7B459CA6A8BDD4 /* RNSpeechIFlytek.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1310,6 +1325,7 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DEMO1.app/DEMO1";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1321,6 +1337,9 @@
 					"$(SRCROOT)\..\node_modules\react-native-local-barcode-recognizer\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-view-shot\ios",
 					"$(SRCROOT)\..\node_modules\react-native-spinkit\ios/**",
+					"$(SRCROOT)\..\node_modules\jcore-react-native\ios\RCTJCoreModule",
+					"$(SRCROOT)\..\node_modules\react-native-aliyun-push\ios\RCTAliyunPush/**",
+					"$(SRCROOT)\..\node_modules\react-native-speech-iflytek\ios\RNSpeechIFlytek/**",
 				);
 			};
 			name = Debug;
@@ -1342,6 +1361,7 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DEMO1.app/DEMO1";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1353,6 +1373,9 @@
 					"$(SRCROOT)\..\node_modules\react-native-local-barcode-recognizer\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-view-shot\ios",
 					"$(SRCROOT)\..\node_modules\react-native-spinkit\ios/**",
+					"$(SRCROOT)\..\node_modules\jcore-react-native\ios\RCTJCoreModule",
+					"$(SRCROOT)\..\node_modules\react-native-aliyun-push\ios\RCTAliyunPush/**",
+					"$(SRCROOT)\..\node_modules\react-native-speech-iflytek\ios\RNSpeechIFlytek/**",
 				);
 			};
 			name = Release;
@@ -1383,6 +1406,9 @@
 					"$(SRCROOT)\..\node_modules\react-native-local-barcode-recognizer\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-view-shot\ios",
 					"$(SRCROOT)\..\node_modules\react-native-spinkit\ios/**",
+					"$(SRCROOT)\..\node_modules\jcore-react-native\ios\RCTJCoreModule",
+					"$(SRCROOT)\..\node_modules\react-native-aliyun-push\ios\RCTAliyunPush/**",
+					"$(SRCROOT)\..\node_modules\react-native-speech-iflytek\ios\RNSpeechIFlytek/**",
 				);
 			};
 			name = Debug;
@@ -1412,6 +1438,9 @@
 					"$(SRCROOT)\..\node_modules\react-native-local-barcode-recognizer\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-view-shot\ios",
 					"$(SRCROOT)\..\node_modules\react-native-spinkit\ios/**",
+					"$(SRCROOT)\..\node_modules\jcore-react-native\ios\RCTJCoreModule",
+					"$(SRCROOT)\..\node_modules\react-native-aliyun-push\ios\RCTAliyunPush/**",
+					"$(SRCROOT)\..\node_modules\react-native-speech-iflytek\ios\RNSpeechIFlytek/**",
 				);
 			};
 			name = Release;
@@ -1441,6 +1470,7 @@
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1452,6 +1482,9 @@
 					"$(SRCROOT)\..\node_modules\react-native-local-barcode-recognizer\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-view-shot\ios",
 					"$(SRCROOT)\..\node_modules\react-native-spinkit\ios/**",
+					"$(SRCROOT)\..\node_modules\jcore-react-native\ios\RCTJCoreModule",
+					"$(SRCROOT)\..\node_modules\react-native-aliyun-push\ios\RCTAliyunPush/**",
+					"$(SRCROOT)\..\node_modules\react-native-speech-iflytek\ios\RNSpeechIFlytek/**",
 				);
 			};
 			name = Debug;
@@ -1481,6 +1514,7 @@
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1492,6 +1526,9 @@
 					"$(SRCROOT)\..\node_modules\react-native-local-barcode-recognizer\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-view-shot\ios",
 					"$(SRCROOT)\..\node_modules\react-native-spinkit\ios/**",
+					"$(SRCROOT)\..\node_modules\jcore-react-native\ios\RCTJCoreModule",
+					"$(SRCROOT)\..\node_modules\react-native-aliyun-push\ios\RCTAliyunPush/**",
+					"$(SRCROOT)\..\node_modules\react-native-speech-iflytek\ios\RNSpeechIFlytek/**",
 				);
 			};
 			name = Release;
@@ -1520,6 +1557,7 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1531,6 +1569,9 @@
 					"$(SRCROOT)\..\node_modules\react-native-local-barcode-recognizer\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-view-shot\ios",
 					"$(SRCROOT)\..\node_modules\react-native-spinkit\ios/**",
+					"$(SRCROOT)\..\node_modules\jcore-react-native\ios\RCTJCoreModule",
+					"$(SRCROOT)\..\node_modules\react-native-aliyun-push\ios\RCTAliyunPush/**",
+					"$(SRCROOT)\..\node_modules\react-native-speech-iflytek\ios\RNSpeechIFlytek/**",
 				);
 			};
 			name = Debug;
@@ -1559,6 +1600,7 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1570,6 +1612,9 @@
 					"$(SRCROOT)\..\node_modules\react-native-local-barcode-recognizer\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-view-shot\ios",
 					"$(SRCROOT)\..\node_modules\react-native-spinkit\ios/**",
+					"$(SRCROOT)\..\node_modules\jcore-react-native\ios\RCTJCoreModule",
+					"$(SRCROOT)\..\node_modules\react-native-aliyun-push\ios\RCTAliyunPush/**",
+					"$(SRCROOT)\..\node_modules\react-native-speech-iflytek\ios\RNSpeechIFlytek/**",
 				);
 			};
 			name = Release;

@@ -103,6 +103,8 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
+
     }
 signingConfigs {
         release {
@@ -145,6 +147,9 @@ signingConfigs {
 }
 
 dependencies {
+    implementation project(':react-native-speech-iflytek')
+    implementation project(':react-native-push-notification')
+    implementation project(':react-native-aliyun-push')
     implementation project(':react-native-amap-geolocation')
     implementation project(':react-native-baidumap-sdk')
     implementation project(':react-native-spinkit')

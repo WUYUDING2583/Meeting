@@ -83,6 +83,7 @@ class InputInfoScreen extends Component {
             this.updateLocationState(location);
             console.log(location);
         });
+        Geolocation.start();
     }
 
     componentWillUnmount() {

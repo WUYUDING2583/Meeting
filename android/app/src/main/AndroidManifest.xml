@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
     package="com.demo1">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -29,16 +30,114 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <!--获取设备唯一标识，用于SDK激活授权-->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    
+    <!--对希望访问通知政策的应用程序的标记许可。   防护等级：正常 added in API level 23-->
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+<!--允许应用程式广播WAP PUSH收据通知。不适用于第三方应用程序 added in API level 2。-->
+    <uses-permission android:name="android.permission.BROADCAST_WAP_PUSH" />
+   
+   <!--通知栏推送-->
+    <!-- < Only if you're using GCM or localNotificationSchedule() > -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <permission
+        android:name="${applicationId}.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
+    <!-- < Only if you're using GCM or localNotificationSchedule() > -->
 
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <!--通知栏推送结束-->
+
+<!--语音合成-->
+ <!--允许程序改变网络连接状态 -->
+ <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+ <!--语音合成结束-->
+   
     <application
       android:name=".MainApplication"
       android:label="@string/app_name"
       android:icon="@mipmap/ic_launcher"
       android:roundIcon="@mipmap/ic_launcher_round"
       android:allowBackup="false"
-      android:theme="@style/AppTheme">
-     
+      android:theme="@style/AppTheme"
+      tools:replace="android:allowBackup"
+      >
+
+       <!--通知栏推送-->
+        <meta-data  android:name="com.dieam.reactnativepushnotification.notification_channel_name"
+                android:value="YOUR NOTIFICATION CHANNEL NAME"/>
+        <meta-data  android:name="com.dieam.reactnativepushnotification.notification_channel_description"
+                    android:value="YOUR NOTIFICATION CHANNEL DESCRIPTION"/>
+        <!-- Change the resource name to your App's accent color - or any other color you want -->
+        <meta-data  android:name="com.dieam.reactnativepushnotification.notification_color"
+                    android:resource="@android:color/white"/>
+
+        <!-- < Only if you're using GCM or localNotificationSchedule() > -->
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="${applicationId}" />
+            </intent-filter>
+        </receiver>
+        <!-- < Only if you're using GCM or localNotificationSchedule() > -->
+
+        <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationPublisher" />
+        <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationBootEventReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <service android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationRegistrationService"/>
+
+        <!-- < Only if you're using GCM or localNotificationSchedule() > -->
+        <service
+            android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerServiceGcm"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+        <!-- </ Only if you're using GCM or localNotificationSchedule() > -->
+
+        <!-- < Else > -->
+        <service
+            android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+      <!--通知栏推送结束-->
+         <receiver
+        android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
+        android:exported="true"
+        android:permission="com.google.android.c2dm.permission.SEND" >
+        <intent-filter>
+            <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+            <category android:name="com.taobao.taobao" />
+        </intent-filter>
+    </receiver>
+    <receiver
+        android:name="com.google.firebase.iid.FirebaseInstanceIdInternalReceiver"
+        android:exported="false" />
+    <service
+        android:name="com.alibaba.sdk.android.push.AgooFirebaseInstanceIDService"
+        android:exported="true" >
+        <intent-filter android:priority="-500" >
+            <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+        </intent-filter>
+    </service>
+    <service
+        android:name="com.alibaba.sdk.android.push.AgooFirebaseMessagingService"
+        android:exported="true" >
+        <intent-filter android:priority="-500" >
+            <action android:name="com.google.firebase.MESSAGING_EVENT" />
+        </intent-filter>
+    </service>
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
@@ -49,6 +148,7 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
       </activity>
+
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
       <meta-data
       android:name="com.baidu.lbsapi.API_KEY"
