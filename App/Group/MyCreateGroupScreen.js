@@ -1,0 +1,223 @@
+import React, { Component } from "react";
+import { View, Text, FlatList, StyleSheet, TouchableWithoutFeedback } from "react-native";
+import Spinner from "react-native-spinkit";
+import RefreshListView, { RefreshState } from "react-native-refresh-list-view";
+import GroupItem from "../../Component/GroupItem";
+import url from "../../url";
+import Global from "../../Global";
+import Loading from "../../Component/Loading";
+import NoInternetScreen from "../NoInternetScreen";
+import Button from "../../Component/Button";
+
+class MyCreateGroupScreen extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: [],
+            refreshState: RefreshState.Idle,
+            isSelect: false,
+            isGetting: true,
+            isNet: true,
+        }
+    }
+
+    //获取群组列表
+    getGroupList = () => {
+        this.setState({ isGetting: true, isNet: true });
+        let URL = url.getGroupList(Global.personInfo.id);
+        let opt = {
+            method: "GET"
+        };
+        console.log(URL);
+        fetch(URL, opt).then((response) => response.json())
+            .then((responseJson) => {
+                console.log(responseJson);
+                if (responseJson.status === 200) {
+                    if (responseJson.data != null) {
+                        let groupCreate = responseJson.data[0].recommends;
+                        this.setState({ data: groupCreate, isGetting: false });
+                    } else {
+                        this.setState({ isGetting: false });
+                    }
+                } else {
+                    this.setState({ isNet: false })
+                }
+            }).catch((error) => {
+                this.setState({ isNet: false });
+                console.log(error);
+            })
+    }
+
+    componentWillMount() {
+        this.setState({
+            isSelect: this.props.navigation.getParam("isSelect", false),
+            select: this.props.navigation.getParam("select", []),
+        });
+        // this.getGroupList();
+        let data = Global.groupList;
+        this.setState({ data, isGetting: false });
+    }
+
+    _keyExtractor = (item, index) => item.id.toLocaleString();
+
+    _renderItem = ({ item }) => {
+        if (item.groupLeader === Global.personInfo.id) {
+            return (
+                <View style={{ marginTop: 20 }}>
+                    <GroupItem onPress={this.entryGroup} data={item} />
+                </View>
+            )
+        }else{
+            return null;
+        }
+    }
+
+    entryGroup = (id) => {
+        let { data } = this.state;
+        let groupDetail = {};
+        data.map((item) => {
+            if (item.id === id) {
+                groupDetail = { ...item };
+            }
+        });
+        console.log("groupDetail:" + JSON.stringify(groupDetail))
+        this.props.navigation.push("MyGroupDetail", {
+            isSelect: this.state.isSelect,
+            data: groupDetail,
+            isMyCreate:true,
+        })
+    }
+
+
+
+    _empty = () => {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.text}>(((φ(◎ロ◎;)φ)))</Text>
+                <Text style={styles.text}>你还没有创建的群组欸</Text>
+                <Text style={styles.text}>去发起会议创建群组吧</Text>
+                <TouchableWithoutFeedback onPress={() => this.getGroupList()}>
+                    <Text style={{ ...styles.text, marginTop: 20 }}>点此刷新</Text>
+                </TouchableWithoutFeedback>
+            </View>
+        )
+    }
+    onHeaderRefresh = () => {
+        this.setState({ refreshState: RefreshState.HeaderRefreshing, isNet: true });
+        this.timer = setTimeout(() => {
+            this.setState({ data: Global.groupList, refreshState: RefreshState.Idle });
+        }, 1000);
+        // let URL = url.getGroupList(Global.personInfo.id);
+        // let opt = {
+        //     method: "GET"
+        // };
+        // console.log(URL);
+        // fetch(URL, opt).then((response) => response.json())
+        //     .then((responseJson) => {
+        //         console.log(responseJson);
+        //         if (responseJson.status === 200) {
+        //             if (responseJson.data != null) {
+        //                 let groupCreate = responseJson.data[0].recommends;
+        //                 this.setState({ data: groupCreate, refreshState: RefreshState.Idle });
+        //             } else {
+        //                 this.setState({ isGetting: false });
+        //             }
+        //         } else {
+        //             this.setState({ isNet: false })
+        //         }
+        //     }).catch((error) => {
+        //         this.setState({ isNet: false });
+        //         console.log(error);
+        //     })
+    }
+
+
+    render() {
+        return (
+            <View style={{
+                flex: 1, alignItems: "stretch", justifyContent: "center",
+                marginLeft: 10, marginRight: 10, backgroundColor: "#FAFAFA"
+            }}>
+                {this.state.isNet ? this.state.isGetting ? <Loading /> : this.state.data.length != 0 ?
+                    <RefreshListView
+                        showsHorizontalScrollIndicator={false}
+                        showsVerticalScrollIndicator={false}
+                        data={this.state.data}
+                        keyExtractor={this._keyExtractor}
+                        renderItem={this._renderItem}
+                        refreshState={this.state.refreshState}
+                        onHeaderRefresh={this.onHeaderRefresh}
+                    /> :
+                    this._empty() : <NoInternetScreen onPress={this.getRoomDetail}
+                        onBack={() => this.props.navigation.goBack()} />}
+            </View>
+        )
+    }
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#FAFAFA',
+    },
+    spinner: {
+        marginBottom: 50
+    },
+    text: {
+        color: "#376B6D",
+        fontSize: 20,
+    },
+    buttonContainer: {
+        backgroundColor: "#FF5A5E",
+        width: Global.gScreen.screen_width * 0.3,
+        height: Global.gScreen.screen_height * 0.15 * 0.5,
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: 20,
+    },
+    buttonText: {
+        color: "white",
+        fontSize: 15,
+    },
+    itemTitle: {
+        fontSize: 20,
+        marginLeft: 20,
+        marginBottom: 20,
+        fontWeight: "bold",
+    },
+    itemText: {
+        fontSize: 18,
+        marginLeft: 20,
+        marginBottom: 10
+    },
+    bottomButton: {
+        flexDirection: "row",
+        backgroundColor: "white",
+        borderTopWidth: 2,
+        borderTopColor: "white",
+        height: Global.gScreen.screen_height * 0.1,
+        width: Global.gScreen.screen_width * 1.2,
+        marginLeft: -Global.gScreen.screen_width * 0.1,
+        //以下是阴影属性：
+        shadowOffset: { width: 0, height: 5 },
+        shadowOpacity: 0.5,
+        shadowRadius: 5,
+        shadowColor: '#FAFAFA',
+        //注意：这一句是可以让安卓拥有灰色阴影
+        elevation: 5,
+    },
+    tip: {
+        fontSize: 18,
+        color: "#376B6D",
+        fontWeight: "bold",
+        margin: 10,
+        marginTop: 15,
+        marginLeft: Global.gScreen.screen_width * 0.1 + 10,
+        marginRight: 10,
+    },
+});
+
+
+export default MyCreateGroupScreen;

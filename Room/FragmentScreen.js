@@ -1,17 +1,14 @@
 import React, { Component } from "react";
-import {
-    View, Button, Text, StyleSheet, Modal,
-    TouchableOpacity, FlatList, NativeModules, Dimensions, Alert
-} from "react-native";
+import { View, Button, Text, StyleSheet, TouchableOpacity, FlatList, NativeModules, Dimensions, Alert } from "react-native";
 import Styles, { backgourndColor } from "../Style";
 import Icon from "react-native-vector-icons/Ionicons"
 import url from "../url";
 import Toast from "react-native-easy-toast";
 import FragmentItem from "../Room/FragmentItem";
+import Modal from "react-native-modal";
 import FragmentSelectItem from "../Room/FragmentSelectItem";
 import QRCode from "react-native-qrcode-svg";
-import global from "../Global";
-import DatePicker from 'react-native-date-picker';
+import DatePicker from "../Component/DatePicker";
 
 export default class Example extends Component {
     constructor(props) {
@@ -45,44 +42,12 @@ export default class Example extends Component {
             isModalVisible: false,
             available: [],//预约会议可选取的时间片
             selectId: [],//预约会议选取的时间片id
-            isVerify: true,//预约前的身份确认
-            isSuccession: true,//判断选择的时间段是否连续
-            showVerify: false,
-            date: new Date().getFullYear() + "/" + (new Date().getMonth() + 1) + "/" + new Date().getDate(),
-            isSetting: true,
-            meetingRoomId: -1,
-            showDatePicker: false,
-            d: new Date(),
+            isVerify: false,//预约前的身份确认
         };
     }
     _toggleModal = () => this.setState({ isModalVisible: !this.state.isModalVisible });
 
-    componentWillMount() {
-        global.storage.load({
-            key: 'MeetingRoomId',
-            autoSync: false,
-            syncInBackground: false,
-        }).then(ret => {
-            this.setState({ meetingRoomId: ret, isSetting: true });
-        }).catch((err) => {
-            console.log("personInfo" + err)
-        })
-    }
     componentDidMount() {
-        // NativeModules.FragmentInterface.getIsSetting((isSetting) => {
-        //     this.setState({ isSetting });
-        // })
-        // NativeModules.FragmentInterface.getIsVerify((isVerify, isPreview) => {
-        //     if (isVerify) {
-        //         this.refs.toast.show("人脸登录成功\n您的信息将在两分钟后被清理");
-        //     } else if (isPreview) {
-        //         this.refs.toast.show("人脸登录失败");
-        //     }
-        //     this.setState({ isVerify });
-        //     this.timer = setTimeout(() => {
-        //         this.setState({ isVerify: false })
-        //     }, 1000 * 2 * 60);
-        // })
         // this.getArrangeList();
         // let date = new Date();
         // let start = "08:00:00";
@@ -161,10 +126,11 @@ export default class Example extends Component {
                 console.log(error);
                 this.refs.toast.show("似乎出了什么错");
             })
+        // NativeModules.LoginInterface.jumpToSetting();
     }
 
-    goToLogin = () => {
-        // NativeModules.FragmentInterface.goToLogin();
+    goBack = () => {
+
     }
     _keyExtractor = (item, index) => index.toLocaleString();
 
@@ -172,34 +138,25 @@ export default class Example extends Component {
 
     //点击开启或预约
     handle = (id, use) => {
-        let { fragment, rest,date } = this.state;
-        let start, end;
-        let d=new Date();
-        fragment.findIndex((item) => {
-            if (item.id === id) {
-                start = date + " " + item.start;
-                end = date + " " + item.end;
-            }
-        });
+        let { fragment, rest } = this.state;
         if (use) {
             //跳转至人脸识别
-            if (d.getTime() > new Date(start).getTime() - rest / 2 * 60 * 1000 && d.getTime() < new Date(end).getTime()) {
-                // NativeModules.FragmentInterface.jumpToRecognize();
-            } else if (d.getTime() < new Date(start).getTime() - rest / 2 * 60 * 1000) {
+            let date = new Date();
+            let start, end;
+            fragment.findIndex((item) => {
+                if (item.id === id) {
+                    start = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate() + " " + item.start;
+                    end = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate() + " " + item.end;
+                }
+            });
+            if (date.getTime() > new Date(start).getTime() - rest / 2 * 60 * 1000 && date.getTime() < new Date(end).getTime()) {
+                this.refs.toast.show("asdf");
+            } else if (date.getTime() < new Date(start).getTime() - rest / 2 * 60 * 1000) {
                 this.refs.toast.show("还未到会议时间请稍后再来");
             } else {
                 this.refs.toast.show("该会议已结束");
             }
         } else {
-            let { isVerify } = this.state;
-            if (!isVerify) {
-                this.setState({ showVerify: true });
-                return;
-            }
-            if (d.getTime() > new Date(start).getTime() - 20 * 60 * 1000) {
-                this.refs.toast.show("无法预约该时间段的会议");
-                return;
-            }
             let available = [];
             for (var i = id; i < fragment.length; i++) {
                 if (!fragment[i].use) {
@@ -208,7 +165,7 @@ export default class Example extends Component {
                 }
                 break;
             }
-            this.setState({ available,showDatePicker:false });
+            this.setState({ available });
             console.log(this.state.available);
             this._toggleModal();
             this.timer = setTimeout(() => {
@@ -217,19 +174,12 @@ export default class Example extends Component {
         }
     }
 
-    showDatePicker = () => {
-        this.setState({ showDatePicker: true });
-        this._toggleModal();
-    }
-
 
     header = () => (
         <View>
-            <TouchableOpacity onPress={this.showDatePicker}>
-                <View style={{ justifyContent: "center", alignItems: "center" }}>
-                    <Text style={{ fontSize: 20, color: backgourndColor }}>{this.state.date}</Text>
-                </View>
-            </TouchableOpacity>
+            <View style={{ justifyContent: "center", alignItems: "center" }}>
+                <DatePicker onSelect={this.onSelectDate} />
+            </View>
             <View style={{ backgroundColor: "#FAFAFA", flexDirection: "row", height: 40, borderBottomWidth: 1, borderBottomColor: backgourndColor }}>
                 <View style={{ flex: 2, justifyContent: "center", alignItems: "center" }}>
                     <Text style={{ fontSize: 18, color: backgourndColor, fontWeight: "bold" }}>时间段</Text>
@@ -267,13 +217,12 @@ export default class Example extends Component {
             this._toggleModal();
             return;
         }
-        let { date } = this.state;
         for (var i = 0; i < fragment.length; i++) {
             if (fragment[i].id === selectId[0]) {
-                let dat = new Date();
-                let start = date + " " + fragment[i].start;
+                let date = new Date();
+                let start = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate() + " " + fragment[i].start;
                 console.log(start);
-                if (new Date(start).getTime() < dat.getTime()) {
+                if (new Date(start).getTime() < date.getTime()) {
                     this._toggleModal();
                     this.refs.toast.show("预约的时间不能早于当前时间");
                     return;
@@ -290,7 +239,11 @@ export default class Example extends Component {
         console.log(bitmap);
         for (var i = 0; i < bitmap.length; i++) {
             if (bitmap[i] != 1) {
-                this.setState({ isSuccession: false });
+                Alert.alert("时间段必须得是连续的哦", "请重新选择", [
+                    {
+                        text: "是"
+                    }
+                ])
                 return;
             }
         }
@@ -304,41 +257,20 @@ export default class Example extends Component {
         this.setState({ fragment, selectId: [] });
         this._toggleModal();
         this.refs.toast.show("预约成功");
-        this.setState({ selectId: [] });
+        // this.setState({selectId:[]});
 
-    }
-
-    jumpToLogin = () => {
-        // NativeModules.FragmentInterface.jumpToLogin();
     }
     render() {
-        let { width, height } = Dimensions.get("window");
+        let { width } = Dimensions.get("window");
         return (
             <View style={Styles.default}>
-                {this.state.showVerify ?
-                    <View style={{
-                        width: width * 0.5, height: width * 0.3, position: "absolute", borderWidth: 1,
-                        borderColor: "white", zIndex: 10, top: height * 0.25, left: width * 0.25,
-                        backgroundColor: backgourndColor, borderRadius: 20, padding: 20,
-                    }}>
-                        <Text style={{ fontSize: 20, color: "white", margin: 10 }}>你还没有登录哦，登陆后才能预约</Text>
-                        <Text style={{ fontSize: 18, color: "white", marginLeft: 10 }}>是否进行人脸登录</Text>
-                        <View style={{ flexDirection: "row-reverse", marginBottom: 10 }}>
-                            <TouchableOpacity onPress={this.notFace}>
-                                <Text style={{ fontSize: 15, color: "white", margin: 15 }}>否</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={this.jumpToFace}>
-                                <Text style={{ fontSize: 15, color: "white", margin: 15 }}>是</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View> : null}
                 <View style={{ flex: 1, }}>
-                    <TouchableOpacity onPress={this.goToLogin.bind(this)}>
+                    <TouchableOpacity onPress={this.goBack.bind(this)}>
                         <Icon name="ios-settings" size={30} color={"white"} style={{ margin: 10 }} />
                     </TouchableOpacity>
                 </View>
                 <View style={{ flex: 9, alignItems: "stretch", justifyContent: "flex-start", padding: 20 }} >
-                    {this.state.isSetting ? <View style={{ borderRadius: 30, flex: 1, borderWidth: 1, borderColor: "#FAFAFA", padding: 20, backgroundColor: "#FAFAFA" }}>
+                    <View style={{ borderRadius: 30, flex: 1, borderWidth: 1, borderColor: "#FAFAFA", padding: 20, backgroundColor: "#FAFAFA" }}>
                         {this.header()}
                         <FlatList
                             showsHorizontalScrollIndicator={false}
@@ -350,28 +282,16 @@ export default class Example extends Component {
                             ItemSeparatorComponent={this.separator}
                         />
 
-                    </View> :
-                        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-                            <View style={{ justifyContent: "center", alignItems: "center", marginBottom: 30 }}>
-                                <Text style={{ fontSize: 20, color: "white", fontWeight: "bold" }}>此设备还未设置代表会议室，请设置</Text>
-                            </View>
-                            <TouchableOpacity onPress={this.jumpToLogin}>
-                                <View style={{ width: Dimensions.get("window").width * 0.4, borderWidth: 1, borderColor: "white", borderRadius: 20, backgroundColor: "white", justifyContent: "center", alignItems: "center", height: 50 }}>
-                                    <Text style={{ fontSize: 20, color: backgourndColor }}>设置</Text>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-
-                    }
+                    </View>
                 </View >
                 <View style={{ flex: 1 }} />
                 <Toast
                     ref="toast"
-                    style={styles.toast}
+                    style={Styles.toast}
                     opacity={0.8}
                     position="top"
-                    fadeOutDuration={1500}
-                    textStyle={{ color: "white", fontSize: 20, fontWeight: "bold" }}
+                    fadeOutDuration={1000}
+                    textStyle={{ color: backgourndColor, fontSize: 20, fontWeight: "bold" }}
                 />
                 <Modal
                     animationType={"slide"}
@@ -379,42 +299,14 @@ export default class Example extends Component {
                     visible={this.state.isModalVisible}
                     onRequestClose={() => { this._toggleModal() }}
                 >
-                    <View style={{ flex: 1, flexDirection: "row", backgroundColor: 'rgba(0, 0, 0, 0.5)', justifyContent: "center" }}>
+                    <View style={{ flex: 1, flexDirection: "row",backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
                         <View style={{ flex: 1 }} />
                         <View style={{ flex: 8, padding: 20 }}>
-                            {this.state.showDatePicker ?
-                                <View style={{
-                                    flex: 1, borderRadius: 30, borderWidth: 1, alignItems: "center",
-                                    borderColor: backgourndColor, padding: 20, backgroundColor: "#FAFAFA",
-                                    justifyContent: "center"
-                                }}>
-                                    <Text style={{ fontSize: 20, color: backgourndColor, margin: 20 }}>请选择要查看的日期</Text>
-                                    <DatePicker
-                                        style={{
-                                            backgroundColor: "#FAFAFA", color: "white",
-                                            marginBottom: 40, borderRadius: 30
-                                        }}
-                                        mode={"date"}
-                                        date={this.state.d}
-                                        fadeToColor={'none'}
-                                        onDateChange={d => {
-                                            let date = d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate()
-                                            this.setState({ d, date })
-                                        }}
-                                    />
-                                    <TouchableOpacity onPress={() => this._toggleModal()}>
-                                        <View style={{
-                                            width: width * 0.5, height: 50, borderColor: backgourndColor, backgroundColor: backgourndColor
-                                            , borderRadius: 20, borderWidth: 1, justifyContent: "center", alignItems: "center"
-                                        }}>
-                                            <Text style={{ fontSize: 20, color: "white" }}>确定</Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                </View>
-                                : <View style={{
-                                    flex: 1, borderRadius: 30, borderWidth: 1, alignItems: "stretch",
-                                    borderColor: "#FAFAFA", padding: 20, backgroundColor: "#FAFAFA",
-                                }}>
+                            <View style={{
+                                flex: 1, borderRadius: 30, borderWidth: 1, alignItems: "stretch",
+                                borderColor: "#FAFAFA", padding: 20, backgroundColor: "#FAFAFA",
+                            }}>
+                                {this.state.isVerify ?
                                     <View style={{ flex: 1, alignItems: "stretch" }}>
                                         <View style={{ borderBottomColor: backgourndColor, borderBottomWidth: 1, alignItems: "center" }}>
                                             <Text style={{ fontSize: 18, fontWeight: "bold", color: backgourndColor }}>从该时间段起您可选择以下时间</Text>
@@ -437,21 +329,16 @@ export default class Example extends Component {
                                                 <Text style={{ fontSize: 20, color: "white" }}>完成</Text>
                                             </View>
                                         </TouchableOpacity>
-                                        {this.state.isSuccession ? null : <View style={{
-                                            width: width * 0.5, height: width * 0.3, position: "absolute", borderWidth: 1, borderColor: "white",
-                                            top: height * 0.25, left: width * 0.1, backgroundColor: backgourndColor, borderRadius: 20, padding: 20,
-                                        }}>
-                                            <Text style={{ fontSize: 20, color: "white", margin: 10 }}>选择的时间段必须要连续哦</Text>
-                                            <Text style={{ fontSize: 18, color: "white", marginLeft: 10 }}>重新选择</Text>
-                                            <View style={{ flexDirection: "row-reverse", marginBottom: 10 }}>
-                                                <TouchableOpacity onPress={this.setSuccession}>
-                                                    <Text style={{ fontSize: 15, color: "white", margin: 15 }}>是</Text>
-                                                </TouchableOpacity>
-                                            </View>
-                                        </View>}
-                                    </View>
+                                    </View> :
+                                    <View style={{ flex: 1 }}>
 
-                                </View>}
+                                        <QRCode value={"https:jsjzx.top/smr-0.0.1/verifyStaff"} size={width * 0.6} />
+                                        <View style={{ borderBottomColor: backgourndColor, borderBottomWidth: 1, alignItems: "center", margin: 40 }}>
+                                            <Text style={{ fontSize: 18, fontWeight: "bold", color: backgourndColor }}>请扫码登录</Text>
+                                        </View>
+                                    </View>
+                                }
+                            </View>
                         </View>
                         <View style={{ flex: 1 }} />
 
@@ -460,28 +347,4 @@ export default class Example extends Component {
             </View >
         )
     }
-
-    jumpToFace = () => {
-       // NativeModules.FragmentInterface.jumpToFaceLogin();
-    }
-    notFace = () => {
-        this.setState({ showVerify: false });
-    }
-    setSuccession = () => {
-        this.setState({ isSuccession: true })
-    }
 }
-
-const styles = StyleSheet.create({
-    toast: {
-        width: Dimensions.get("window").width * 0.5,
-        height: Dimensions.get("window").width * 0.5,
-        backgroundColor: backgourndColor,
-        borderWidth: 1,
-        borderColor: "white",
-        borderRadius: 10,
-        padding: 10,
-        justifyContent: "center",
-        alignItems: "center"
-    }
-})

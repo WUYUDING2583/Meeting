@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Button from "../Component/Button";
-import Styles from "../Style";
+import Styles,{backgourndColor} from "../Style";
 import RNExitApp from 'react-native-exit-app';
 import Icon from "react-native-vector-icons/Ionicons"
+import Toast from 'react-native-easy-toast';
 
 class InitScreen extends Component {
 
@@ -21,15 +22,23 @@ class InitScreen extends Component {
                     </TouchableOpacity>
                     <Button title="登录" background={Styles.authButtonfocusdContainer}
                         textStyle={Styles.authFocusedButtonText}
-                        onPress={() => this.props.navigation.push("Login")} />
+                        onPress={() => this.refs.toast.show("游客功能还未完善请进入机构登录")} />
                     <Button title="创建账号" background={Styles.authButtonContainer}
                         textStyle={Styles.authButtonText}
-                        onPress={() => this.props.navigation.push("NamePhone")} />
+                        onPress={() => this.refs.toast.show("游客该功能还未完善请进入机构登录")} />
                 </View>
                 <View style={{ flex: 1 }} />
-                </View>
-                );
-            }
-        }
-        
+                <Toast
+                    ref="toast"
+                    style={Styles.toast}
+                    opacity={0.8}
+                    position="top"
+                    fadeOutDuration={1000}
+                    textStyle={{ color: backgourndColor, fontSize: 20, fontWeight: "bold" }}
+                />
+            </View>
+        );
+    }
+}
+
 export default InitScreen;

@@ -68,6 +68,7 @@
 		076F2935D7BA4D0CB70C50D6 /* libRCTJCoreModule.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D28D50BDA9CD4F18822A1ECF /* libRCTJCoreModule.a */; };
 		ED235C2BF11E414B803996CB /* libRCTAliyunPush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 319C9382C5B74C9B93A91AB4 /* libRCTAliyunPush.a */; };
 		88F412C9CD3E4FD6A5DD59F1 /* libRNSpeechIFlytek.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F94626C77C03461ABA7E490D /* libRNSpeechIFlytek.a */; };
+		10E0FCF94211457BB86F5263 /* libRNDatePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B336375EEFB74B89A73CFD2D /* libRNDatePicker.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -416,6 +417,8 @@
 		319C9382C5B74C9B93A91AB4 /* libRCTAliyunPush.a */ = {isa = PBXFileReference; name = "libRCTAliyunPush.a"; path = "libRCTAliyunPush.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		481C0A4AAE7B459CA6A8BDD4 /* RNSpeechIFlytek.xcodeproj */ = {isa = PBXFileReference; name = "RNSpeechIFlytek.xcodeproj"; path = "../node_modules/react-native-speech-iflytek/ios/RNSpeechIFlytek.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		F94626C77C03461ABA7E490D /* libRNSpeechIFlytek.a */ = {isa = PBXFileReference; name = "libRNSpeechIFlytek.a"; path = "libRNSpeechIFlytek.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		500F439FE79A44BCA9E3B445 /* RNDatePicker.xcodeproj */ = {isa = PBXFileReference; name = "RNDatePicker.xcodeproj"; path = "../node_modules/react-native-date-picker/ios/RNDatePicker.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		B336375EEFB74B89A73CFD2D /* libRNDatePicker.a */ = {isa = PBXFileReference; name = "libRNDatePicker.a"; path = "libRNDatePicker.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -456,6 +459,7 @@
 				076F2935D7BA4D0CB70C50D6 /* libRCTJCoreModule.a in Frameworks */,
 				ED235C2BF11E414B803996CB /* libRCTAliyunPush.a in Frameworks */,
 				88F412C9CD3E4FD6A5DD59F1 /* libRNSpeechIFlytek.a in Frameworks */,
+				10E0FCF94211457BB86F5263 /* libRNDatePicker.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -659,6 +663,7 @@
 				ACC3E772A76043B58DF19E91 /* RCTJCoreModule.xcodeproj */,
 				A9BEFF1DAA694AA7B76169ED /* RCTAliyunPush.xcodeproj */,
 				481C0A4AAE7B459CA6A8BDD4 /* RNSpeechIFlytek.xcodeproj */,
+				500F439FE79A44BCA9E3B445 /* RNDatePicker.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1326,6 +1331,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1340,6 +1346,7 @@
 					"$(SRCROOT)\..\node_modules\jcore-react-native\ios\RCTJCoreModule",
 					"$(SRCROOT)\..\node_modules\react-native-aliyun-push\ios\RCTAliyunPush/**",
 					"$(SRCROOT)\..\node_modules\react-native-speech-iflytek\ios\RNSpeechIFlytek/**",
+					"$(SRCROOT)\..\node_modules\react-native-date-picker\ios\RNDatePicker",
 				);
 			};
 			name = Debug;
@@ -1362,6 +1369,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1376,6 +1384,7 @@
 					"$(SRCROOT)\..\node_modules\jcore-react-native\ios\RCTJCoreModule",
 					"$(SRCROOT)\..\node_modules\react-native-aliyun-push\ios\RCTAliyunPush/**",
 					"$(SRCROOT)\..\node_modules\react-native-speech-iflytek\ios\RNSpeechIFlytek/**",
+					"$(SRCROOT)\..\node_modules\react-native-date-picker\ios\RNDatePicker",
 				);
 			};
 			name = Release;
@@ -1409,6 +1418,7 @@
 					"$(SRCROOT)\..\node_modules\jcore-react-native\ios\RCTJCoreModule",
 					"$(SRCROOT)\..\node_modules\react-native-aliyun-push\ios\RCTAliyunPush/**",
 					"$(SRCROOT)\..\node_modules\react-native-speech-iflytek\ios\RNSpeechIFlytek/**",
+					"$(SRCROOT)\..\node_modules\react-native-date-picker\ios\RNDatePicker",
 				);
 			};
 			name = Debug;
@@ -1441,6 +1451,7 @@
 					"$(SRCROOT)\..\node_modules\jcore-react-native\ios\RCTJCoreModule",
 					"$(SRCROOT)\..\node_modules\react-native-aliyun-push\ios\RCTAliyunPush/**",
 					"$(SRCROOT)\..\node_modules\react-native-speech-iflytek\ios\RNSpeechIFlytek/**",
+					"$(SRCROOT)\..\node_modules\react-native-date-picker\ios\RNDatePicker",
 				);
 			};
 			name = Release;
@@ -1471,6 +1482,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1485,6 +1497,7 @@
 					"$(SRCROOT)\..\node_modules\jcore-react-native\ios\RCTJCoreModule",
 					"$(SRCROOT)\..\node_modules\react-native-aliyun-push\ios\RCTAliyunPush/**",
 					"$(SRCROOT)\..\node_modules\react-native-speech-iflytek\ios\RNSpeechIFlytek/**",
+					"$(SRCROOT)\..\node_modules\react-native-date-picker\ios\RNDatePicker",
 				);
 			};
 			name = Debug;
@@ -1515,6 +1528,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1529,6 +1543,7 @@
 					"$(SRCROOT)\..\node_modules\jcore-react-native\ios\RCTJCoreModule",
 					"$(SRCROOT)\..\node_modules\react-native-aliyun-push\ios\RCTAliyunPush/**",
 					"$(SRCROOT)\..\node_modules\react-native-speech-iflytek\ios\RNSpeechIFlytek/**",
+					"$(SRCROOT)\..\node_modules\react-native-date-picker\ios\RNDatePicker",
 				);
 			};
 			name = Release;
@@ -1558,6 +1573,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1572,6 +1588,7 @@
 					"$(SRCROOT)\..\node_modules\jcore-react-native\ios\RCTJCoreModule",
 					"$(SRCROOT)\..\node_modules\react-native-aliyun-push\ios\RCTAliyunPush/**",
 					"$(SRCROOT)\..\node_modules\react-native-speech-iflytek\ios\RNSpeechIFlytek/**",
+					"$(SRCROOT)\..\node_modules\react-native-date-picker\ios\RNDatePicker",
 				);
 			};
 			name = Debug;
@@ -1601,6 +1618,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1615,6 +1633,7 @@
 					"$(SRCROOT)\..\node_modules\jcore-react-native\ios\RCTJCoreModule",
 					"$(SRCROOT)\..\node_modules\react-native-aliyun-push\ios\RCTAliyunPush/**",
 					"$(SRCROOT)\..\node_modules\react-native-speech-iflytek\ios\RNSpeechIFlytek/**",
+					"$(SRCROOT)\..\node_modules\react-native-date-picker\ios\RNDatePicker",
 				);
 			};
 			name = Release;

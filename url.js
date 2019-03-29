@@ -1,16 +1,17 @@
-const app = `https://www.jsjzx.top/smr-0.0.1-SNAPSHOT`;
+const app = `https://www.jsjzx.top/smr-0.0.1`;
 
 function encodeFilter(filter) {
     return encodeURIComponent(JSON.stringify(filter));
 }
 export const QRCType={
     meeting:200,
+    invite:100,
 }
 export default {
     //发送验证码
     sendVerifyMsg: (phone) => app + `/visitor/sendMess?phone=${phone}`,
     //职员登录
-    staffLogin: (jobnum, pswd, company) => app + `/staff/alogin?jobnum=${jobnum}&pswd=${pswd}&company=${company}`,
+    staffLogin: (company,jobnum, pswd) => app + `/staff/alogin?company=${company}&jobnum=${jobnum}&pswd=${pswd}`,
     //验证游客账号
     verifyVisitor:(phone)=>app+`/visitor/alogin?phone=${phone}`,
     //游客注册
@@ -51,4 +52,19 @@ export default {
     faceVerify:()=>app+`/face/addFaceInfo`,
     //获取公司列表
     getCompanyList:(name)=>app+`/company/getCompany?name=${name}`,
+    //获取群组
+    getGroupList:(staffId)=>app+`/staff/getGroup?staffId=${staffId}`,
+    //修改密码
+    alterPsw:()=>app+`/staff/alterPass`,
+    //取消预约会议
+    cancelAppointment:(appointmentId)=>app+`/conference/staff/cancelAppointment?appointmentId=${appointmentId}`,
+
+    ////以下为会议端接口
+    //公司管理员登录
+    adminLogin:()=>app+`/admin/Login`,
+    //查看会议室预约安排
+    searchArrange:(time,place_id)=>app+`/admin/OFindStaffAppointmentsInWeek?time=${time}&place_id=${place_id}`,
+    //根据公司id获取公司所有会议室
+    getMeetingRoomList:(companyId)=>app+`/admin/OFindPlacesByCompanyId?companyId=${companyId}`,
+
 }

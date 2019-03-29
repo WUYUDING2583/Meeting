@@ -3,6 +3,7 @@ package com.demo1;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.henninghall.date_picker.DatePickerPackage;
 import com.zphhhhh.speech.SpeechPackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import org.wonday.aliyun.push.AliyunPushPackage;
@@ -21,6 +22,7 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+
 
 import java.util.Arrays;
 import java.util.List;
@@ -54,6 +56,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
+            new DatePickerPackage(),
             new SpeechPackage(),
             new ReactNativePushNotificationPackage(),
             new AliyunPushPackage(), 
@@ -67,7 +70,7 @@ public class MainApplication extends Application implements ReactApplication {
         new VectorIconsPackage(), 
         new RNExitAppPackage(),
         new RNGestureHandlerPackage(), 
-        new RNSpinkitPackage() 
+        new RNSpinkitPackage()
       );
     }
 

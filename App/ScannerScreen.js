@@ -15,8 +15,9 @@ import LocalBarcodeRecognizer from 'react-native-local-barcode-recognizer';
 import { RNCamera } from 'react-native-camera'
 import Back from '../Component/Back';
 const { width, height } = Dimensions.get('window')
-import url,{QRCType} from "../url";
+import url, { QRCType } from "../url";
 import NoInternetScreen from "./NoInternetScreen";
+import Global, { personType } from "../Global";
 
 export default class Camera extends Component {
     constructor(props) {
@@ -50,60 +51,101 @@ export default class Camera extends Component {
         }
     }
     componentWillUnmount() {
-        this.state.show = false;
+        this.setState({ show: false });
+    }
+
+    start = () => {
+        this.setState({ show: true });
+        InteractionManager.runAfterInteractions(() => {
+            this.startAnimation()
+        })
     }
 
     //添加与会人员
-    addAttendPerson = (meetingId) => {
-        storage.load({
-            key: 'staffInfo',
-            autoSync: false,
-            syncInBackground: false,
-        }).then(ret => {
-            this.setState({ personId: ret.personId, personName: ret.personName });
-        }).catch(err => {
-            console.warn(err.message);
-            switch (err.name) {
-                case 'NotFoundError':
-                    // TODO;
-                    break;
-                case 'ExpiredError':
-                    // TODO
-                    break;
+    addAttendPerson = (meetingId, data = "") => {
+        if (meetingId === -1) {
+            this.props.navigation.navigate("Message", {
+                start: this.start,
+            });
+        } else {
+            if (data === QRCType.meeting) {
+                this.props.navigation.navigate("Message", {
+                    message: "加入会议成功",
+                    start: this.start,
+                });
+            }else{
+                this.props.navigation.navigate("Message", {
+                    message: "加入群组成功",
+                    start: this.start,
+                });
             }
-        })
-        let attendees = [];
-        attendees.push({ personId: this.state.personId, name: this.state.personName });
-        let data = { meetingId, attendees };
-        let opts = {
-            method: "POST",   //请求方法
-            body: data,   //请求体
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-        };
-        fetch(url.addAttendee(), opts).then((response) => response.json())
-            .then((responseJson) => {
-                if (responseJson.status === 200) {
-                    this.props.navigation.push("Message",{message:responseJson.msg});
-                }
-            }).catch(() => {
-                this.setState({ isNet: false });
-            })
+        }
+        // let personId = Global.personInfo.id;
+        // let name = Global.personInfo.name;
+        // let identity=Global.personInfo.personType===personType.staff?"staff":"visitor";
+        // let attendees = [];
+        // attendees.push({ personId, name,state:"未出席",identity });
+        // let data = { meetingId, attendees };
+        // console.log(data);
+        // let opts = {
+        //     method: "POST",   //请求方法
+        //     body: JSON.stringify(data),   //请求体
+        //     headers: {
+        //         'Accept': 'application/json;charset=utf-8',
+        //         'Content-Type': 'application/json;charset=utf-8',
+        //         "Connection": "close",
+        //     },
+        // };
+        // console.log(url.addAttendee());
+        // fetch(url.addAttendee(), opts).then((response) => response.json())
+        //     .then((responseJson) => {
+        //         console.log(responseJson);
+        //         if (responseJson.status === 200) {
+        //             if ("success".localeCompare(responseJson.result) === 0) {
+        //                 this.props.navigation.navigate("Message", {
+        //                     message: "加入会议成功",
+        //                     start: this.start,
+        //                 });
+        //             } else {
+        //                 this.props.navigation.navigate("Message", {
+        //                     message: "出现了某些问题，没有加入会议",
+        //                     start: this.start,
+        //                 });
+        //             }
+        //         } else {
+        //             this.props.navigation.navigate("Message", {
+        //                 message: "出现了某些问题，没有加入会议",
+        //                 start: this.start,
+        //             });
+        //         }
+        //     }).catch((error) => {
+        //         console.log(error);
+        //         this.props.navigation.navigate("Message", {
+        //             message: "网络似乎出现了问题",
+        //             start: this.start,
+        //         });
+        //     })
     }
     barcodeReceived = (e) => {
         if (this.state.show) {
             console.log(e);
-            let data = JSON.parse(e.data);
-            if(data.type===QRCType.meeting){
-                this.addAttendPerson();
-            }
-            this.setState({
-                transCode: e.data,
-                type: e.type,
-                show: false
-            })
+            let data = {};
+            this.timer=setTimeout(() => {
+                try {
+                    data = JSON.parse(e.data);
+                } catch (error) {
+                    this.addAttendPerson(-1);
+                }
+    
+                console.log(data);
+                this.addAttendPerson(data.code, data.type);
+                this.setState({
+                    transCode: e.data,
+                    type: e.type,
+                    show: false
+                })
+            }, 1000);
+            
         }
     }
     //选择图片
@@ -152,7 +194,7 @@ export default class Camera extends Component {
         let avatarSource = this.state.avatarSource;
         return (
             <View style={{ flex: 1 }}>
-                {this.state.isNet?<View style={styles.container}>
+                <View style={styles.container}>
                     <View style={{ position: "absolute", top: 10, left: 10, zIndex: 10 }}>
                         <Back onPress={() => this.props.navigation.goBack()} />
                     </View>
@@ -190,12 +232,8 @@ export default class Camera extends Component {
                                 </Animated.View>
                             </View>
                         </View>
-                        <View style={styles.info}>
-                            <Text>条码信息：{this.state.transCode}</Text>
-                            <Text>条码类型：{this.state.type}</Text>
-                        </View>
                     </RNCamera>
-                </View>:<NoInternetScreen onPress={()=>this.props.navigation.goBack()}/>}
+                </View>
             </View>
         );
     }

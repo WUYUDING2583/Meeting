@@ -8,57 +8,55 @@ import Icon from "react-native-vector-icons/Ionicons";
 import url from "../../../url";
 import Loading from "../../../Component/Loading";
 import NoInternetScreen from "../../NoInternetScreen";
+import Global from "../../../Global";
 
 class RoomDetailScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
             //id:this.props.navigation.getParam("id",-1),
-            data: null,
+            data: {},
             personId: -1,
             isNet: true,//是否链接网络
-            isGetting: false,//是否获取数据
+            isGetting: true,//是否获取数据
         }
     }
 
     getRoomDetail = () => {
         this.setState({ isGetting: true, isNet: true });
-        storage.load({
-            key: 'staffInfo',
-            autoSync: false,
-            syncInBackground: false,
-        }).then(ret => {
-            this.setState({ personId: ret.personId });
-        }).catch(err => {
-            console.warn(err.message);
-            switch (err.name) {
-                case 'NotFoundError':
-                    // TODO;
-                    break;
-                case 'ExpiredError':
-                    // TODO
-                    break;
-            }
-        })
         let opts = {
             method: "GET"
         }
         let URL = url.getPlaceMsgStaff(this.props.navigation.getParam("id", -1));
+        console.log(URL);
         fetch(URL, opts).then((response) => response.json())
             .then((responseJson) => {
+                console.log(responseJson);
                 if (responseJson.status === 200) {
-                    this.setState({ data: responseJson.data });
+                    this.setState({ data: responseJson.data, isGetting: false });
                 } else {
+                    this.setState({ isGetting: false });
                     this.props.navigation.navigate("Message", { message: responseJson.msg });
                 }
-                this.setState({ isGetting: false });
             }).catch((error) => {
-                this.setState({ isNet: false })
+                this.setState({ isNet: false });
+                console.log(error);
             })
     }
 
-    componentWillMount() {
-        this.getRoomDetail();
+    componentDidMount() {
+        // this.getRoomDetail();
+        this.setState({ isGetting: false, isNet: true });
+        let id=this.props.navigation.getParam("id", -1);
+        
+        let data = {};
+        Global.roomDetail.map((item)=>{
+            if(item.id===id){
+                data=item;
+            }
+        })
+
+        this.setState({ data });
     }
 
     renderDevice = () => {
@@ -82,9 +80,9 @@ class RoomDetailScreen extends Component {
     }
 
     reservation = () => {
-        let personId = this.state.data.personId;
-        let data = { ...this.props.navigation.getParam("data", {}), place_id: this.state.data.id, place_name: this.state.data.name };
-        this.props.navigation.navigate("HistoryPerson", { personId: personId, data: data });
+        // let personId = this.state.data.personId;
+        let data = { ...this.props.navigation.getParam("data", {}), place_id: this.state.data.id, place_name: this.state.data.name,address:this.state.data.address };
+        this.props.navigation.navigate("HistoryPerson", { data: data });
     }
 
     render() {
@@ -99,7 +97,7 @@ class RoomDetailScreen extends Component {
                         <ScrollView showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}
                             style={{ height: height * 0.85, backgroundColor: "#FAFAFA" }}>
                             <ImageSwpier imageWidth={width} imageHeight={height * 0.4}
-                                slide={true} />
+                                slide={true} source={this.state.data.portraits} />
                             <Text style={{ fontSize: 15, marginLeft: 20, marginTop: 10, color: "#B54434", flexWrap: "wrap", marginRight: 20 }}>{this.state.data.name}</Text>
                             <Text style={{ fontSize: 30, fontWeight: "bold", marginLeft: 20, marginTop: 10, flexWrap: "wrap", marginRight: 20 }}>{this.state.data.company_name}</Text>
                             <Text style={{ fontSize: 20, marginLeft: 20, marginTop: 10, flexWrap: "wrap", marginRight: 20 }}>{this.state.data.address}</Text>

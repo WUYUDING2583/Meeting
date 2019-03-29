@@ -8,12 +8,16 @@ import InputDetailScreen from '../../App/Staff/Reservation/InputDetailScreen';
 import ReservationCompleteScreen from "../../App/Staff/Reservation/ReservationCompleteScreen";
 import Global,{personType} from "../../Global";
 import SelectScreen from '../../App/Visitor/SelectScreen';
+import AddExternalScreen from '../../App/Staff/Reservation/AddExternalScreen';
+import GroupListScreen from '../../App/Group/GroupListScreen';
+import GroupDetailScreen from '../../App/Group/GroupDetailScreen';
+import RoomListScreen from '../../App/Staff/Reservation/RoomListScreen';
 
 const ReservationStack = createStackNavigator(
     {
         InputInfo: { screen: InputInfoScreen },
         RoomList: {
-            screen: RoomList,
+            screen: RoomListScreen,
             navigationOptions: ({ navigation }) => ({
                 title: "可预约场地",
                 headerStyle: {
@@ -44,11 +48,23 @@ const ReservationStack = createStackNavigator(
             navigationOptions:({navigation})=>({
                 title:"选择场地",
             })
+        },
+        AddExternal:{
+            screen:AddExternalScreen,
+            navigationOptions:({navigation})=>({
+                title:"添加嘉宾信息",
+            })
+        },
+        GroupList:{
+            screen:GroupListScreen,
+        },
+        GroupDetail:{
+            screen:GroupDetailScreen,
         }
     }
     ,
     {
-        initialRouteName: Global.personInfo.personType==personType.staff?"InputInfo":"Select",
+        initialRouteName: "InputInfo",
         defaultNavigationOptions: {
             headerStyle: {
                 backgroundColor: 'white',

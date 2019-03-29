@@ -5,6 +5,7 @@ import NoInternetScreen from "../NoInternetScreen";
 import Loading from "../../Component/Loading";
 import url from "../../url";
 import RefreshListView, { RefreshState } from "react-native-refresh-list-view";
+import Global from "../../Global";
 
 class PresentReservationScreen extends Component {
     constructor(props) {
@@ -18,65 +19,43 @@ class PresentReservationScreen extends Component {
             refreshState: RefreshState.Idle,
         }
     }
+
     onHeaderRefresh = () => {
         this.setState({ refreshState: RefreshState.HeaderRefreshing, isNet: true });
-        storage.load({
-            key: 'staffInfo',
-            autoSync: false,
-            syncInBackground: false,
-        }).then(ret => {
-            this.setState({ personId: ret.personId });
-        }).catch(err => {
-            console.warn(err.message);
-            switch (err.name) {
-                case 'NotFoundError':
-                    // TODO;
-                    break;
-                case 'ExpiredError':
-                    // TODO
-                    break;
-            }
-        })
-        let URL = url.getRecentArrangeStaff(this.state.personId);
-        let opts = {
-            method: "GET"
-        }
-        fetch(URL, opts).then((response) => response.json())
-            .then((responseJson) => {
-                if (responseJson.status === 200) {
-                    this.setState({ data: responseJson.data });
-                }
-                this.setState({refreshState: RefreshState.Idle})
-            }).catch(() => {
-                this.setState({ isNet: false });
-            })
+        this.timer=setTimeout(() => {
+            this.setState({refreshState: RefreshState.Idle,data:Global.presentMeeting})
+        }, 2000);
+        
+        // let personId=Global.personInfo.id;
+        // this.setState({personId});
+        // let URL = url.getRecentArrangeStaff(personId);
+        // let opts = {
+        //     method: "GET"
+        // }
+        // fetch(URL, opts).then((response) => response.json())
+        //     .then((responseJson) => {
+        //         console.log(responseJson);
+        //         if (responseJson.status === 200) {
+        //             this.setState({ data: responseJson.data });
+        //         }
+        //         
+        //     }).catch(() => {
+        //         this.setState({ isNet: false });
+        //     })
+
     }
 
     getRecent = () => {
         this.setState({ isGetting: true, isNet: true });
-        storage.load({
-            key: 'staffInfo',
-            autoSync: false,
-            syncInBackground: false,
-        }).then(ret => {
-            this.setState({ personId: ret.personId });
-        }).catch(err => {
-            console.warn(err.message);
-            switch (err.name) {
-                case 'NotFoundError':
-                    // TODO;
-                    break;
-                case 'ExpiredError':
-                    // TODO
-                    break;
-            }
-        })
-        let URL = url.getRecentArrangeStaff(this.state.personId);
+        let personId=Global.personInfo.id;
+        this.setState({personId});
+        let URL = url.getRecentArrangeStaff(personId);
         let opts = {
             method: "GET"
         }
         fetch(URL, opts).then((response) => response.json())
             .then((responseJson) => {
+                console.log(responseJson);
                 if (responseJson.status === 200) {
                     this.setState({ data: responseJson.data });
                 }
@@ -88,98 +67,8 @@ class PresentReservationScreen extends Component {
 
     componentWillMount() {
         // this.getRecent();
-        //     职员:
-        // url:http://localhost:8080/conference/staff/getHistory
-        // 游客：
-        // url:http://localhost:8080/conference/visitor/getHistory
-
-        // 请求方式：get
-        // 请求参数：BigInteger personId(用户的唯一编号)
-
-        let data = [
-            {
-                appointmentId: 2,
-                place: "广B203",
-                address: "广知楼",
-                date: "2011-04-10",
-                time: "01:05~01:35",
-                //end_time: "2011-04-10T01:35:08.000+0000",
-                introduction: "asdfaertad",
-                organizer: "Lizzette466",
-                phone: "(402) 687-8343",
-                attendees: [
-                    {
-                        id: 3,
-                        appointmentId: 2,
-                        personId: 1,
-                        name: "张鑫楠",
-                        identity: "staff",
-                        state: "已出席",
-                    }
-                ]
-            }, {
-                appointmentId: 2,
-                place: "广B203",
-                address: "广知楼",
-                date: "2011-04-10",
-                time: "01:05~01:35",
-                //end_time: "2011-04-10T01:35:08.000+0000",
-                introduction: "asdfaertad",
-                organizer: "Lizzette466",
-                phone: "(402) 687-8343",
-                attendees: [
-                    {
-                        id: 3,
-                        appointmentId: 2,
-                        personId: 1,
-                        name: "张鑫楠",
-                        identity: "staff",
-                        state: "已出席",
-                    }
-                ]
-            }, {
-                appointmentId: 2,
-                place: "广B203",
-                address: "广知楼",
-                date: "2011-04-10",
-                time: "01:05~01:35",
-                //end_time: "2011-04-10T01:35:08.000+0000",
-                introduction: "asdfaertad",
-                organizer: "Lizzette466",
-                phone: "(402) 687-8343",
-                attendees: [
-                    {
-                        id: 3,
-                        appointmentId: 2,
-                        personId: 1,
-                        name: "张鑫楠",
-                        identity: "staff",
-                        state: "已出席",
-                    }
-                ]
-            }, {
-                appointmentId: 2,
-                place: "广B203",
-                address: "广知楼",
-                date: "2011-04-10",
-                time: "01:05~01:35",
-                //end_time: "2011-04-10T01:35:08.000+0000",
-                introduction: "asdfaertad",
-                organizer: "Lizzette466",
-                phone: "(402) 687-8343",
-                attendees: [
-                    {
-                        id: 3,
-                        appointmentId: 2,
-                        personId: 1,
-                        name: "张鑫楠",
-                        identity: "高级程序",
-                        state: "已出席",
-                    },
-                ]
-            },
-        ]
-        this.setState({ data });
+        let data =Global.presentMeeting;
+        this.setState({data});
     }
 
     getPerson = (id, attendees) => {
@@ -203,13 +92,6 @@ class PresentReservationScreen extends Component {
                 }}>
                     <View style={{ flex: 1, borderRightWidth: 4, borderRightColor: "#376B6D" }} />
                     <View style={{ flex: 25 }}>
-                        {/* <FlatList
-                            showsHorizontalScrollIndicator={false}
-                            showsVerticalScrollIndicator={false}
-                            data={this.state.data}
-                            keyExtractor={this._keyExtractor}
-                            renderItem={this._renderItem}
-                        /> */}
                         <RefreshListView
                             showsHorizontalScrollIndicator={false}
                             showsVerticalScrollIndicator={false}

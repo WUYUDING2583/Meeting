@@ -28,13 +28,14 @@ class AuthLoadingScreen extends React.Component {
     }).then(ret => {
       Global.phone = ret;
     }).catch((err)=>console.log("phone"+err))
-    
+   
     Global.storage.load({
       key: 'personInfo',
       autoSync: false,
       syncInBackground: false,
     }).then(ret => {
       Global.personInfo = ret;
+      console.log(Global.personInfo);
       this.props.navigation.navigate(Global.personInfo ? 'App' : 'Auth');
     }).catch((err)=>{
       console.log("personInfo"+err)
@@ -73,6 +74,6 @@ export default createAppContainer(createSwitchNavigator(
     Auth: AuthStack,
   },
   {
-    initialRouteName: 'App',
+    initialRouteName: 'AuthLoading',
   }
 ));

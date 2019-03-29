@@ -22,12 +22,13 @@ class InstitutionInitScreen extends Component {
             y: 0,//用于keyboardawarescrollview出现的空白区域调整
             screenHeight: Global.gScreen.screen_height,
             data: null,//公司列表数据
-            companyList: null,//公司列表未处理数据
+            companyList: [],//公司列表未处理数据
         };
     }
 
     faceCognition = () => {
         let { institution, institutionId, jobnum } = this.state;
+        Global.jobnum=jobnum;
         if (institution.length > 0 && jobnum.length > 0) {
             this.props.navigation.push("FaceCognition", {
                 institution: institution,
@@ -41,6 +42,10 @@ class InstitutionInitScreen extends Component {
 
     Psw = () => {
         let { institution, jobnum } = this.state;
+        console.log("institution:"+institution);
+        console.log("jobnum:"+jobnum);
+
+        Global.jobnum=jobnum;
         if (institution.length > 0 && jobnum.length > 0) {
             this.props.navigation.push("InstitutionPsw", {
                 institution,
@@ -65,7 +70,7 @@ class InstitutionInitScreen extends Component {
                     this.setState({ data, companyList });
                 }
             }).catch(() => {
-                // this.refs.toast.show("网络似乎在躲猫猫欸");
+                this.refs.toast.show("网络似乎在躲猫猫欸");
             })
     }
 
@@ -73,22 +78,22 @@ class InstitutionInitScreen extends Component {
         this.setState({ institution });
         clearTimeout(this.timer);
         this.timer = setTimeout(() => {
-            // this.getCompanyList(institution);
-            let companyList = [
-                {
-                    id: 1,
-                    name: "Ligon568",
-                },
-                {
-                    id: 2,
-                    name: "asdfa",
-                },
-            ];
-            let data = [];
-            companyList.map((item) => {
-                data.push(item.name);
-            });
-            this.setState({ data, companyList });
+            this.getCompanyList(institution);
+            // let companyList = [
+            //     {
+            //         id: 1,
+            //         name: "Ligon568",
+            //     },
+            //     {
+            //         id: 2,
+            //         name: "asdfa",
+            //     },
+            // ];
+            // let data = [];
+            // companyList.map((item) => {
+            //     data.push(item.name);
+            // });
+            // this.setState({ data, companyList });
             if (institution.length === 0) {
                 this.drop.hide();
             } else {
@@ -102,6 +107,8 @@ class InstitutionInitScreen extends Component {
         data.map((item, index) => {
             if (inde == index) {
                 this.setState({ institution: item.name, institutionId: item.id });
+                Global.company=item.name;
+                console.log(Global.company);
             }
         })
     }
@@ -167,8 +174,8 @@ class InstitutionInitScreen extends Component {
                             <Text style={{ color: "white", fontSize: 15, marginRight: 20, marginLeft: 20 }}>第一次登录请使用账号密码登录</Text>
                         </View>
                         <View style={{
-                            flex: 1, height: (screenHeight - y - 24), flexDirection: "column-reverse",
-                            alignItems: "flex-end"
+                            flex: 1, height: (screenHeight - y+10), flexDirection: "column-reverse",
+                            alignItems: "flex-end",backgroundColor:backgourndColor,
                         }} onLayout={this.onLayout}>
                             <Forward onPress={this.Psw} title="账号密码登录"
                                 feasible={this.state.institution.length > 0} />

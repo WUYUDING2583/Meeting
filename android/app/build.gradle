@@ -104,6 +104,7 @@ android {
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
+        javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true } }
 
     }
 signingConfigs {
@@ -147,6 +148,7 @@ signingConfigs {
 }
 
 dependencies {
+    implementation project(':react-native-date-picker')
     implementation project(':react-native-speech-iflytek')
     implementation project(':react-native-push-notification')
     implementation project(':react-native-aliyun-push')

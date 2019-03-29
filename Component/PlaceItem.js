@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Label from "./Label";
 import { View, Image, Text, StyleSheet, TouchableWithoutFeedback } from "react-native";
 import ImageSwiper from "./ImageSwiper";
-import Global,{personType} from "../Global";
+import Global, { personType } from "../Global";
 
 class PlaceItem extends Component {
     constructor(props) {
@@ -10,7 +10,7 @@ class PlaceItem extends Component {
     }
 
     handlePress = () => {
-        this.props.onPress(this.props.item.id,this.props.item.type);
+        this.props.onPress(this.props.item.id, this.props.item.type);
     }
     render() {
         return (
@@ -19,7 +19,7 @@ class PlaceItem extends Component {
                     {/* <Image source={require('./weather.jpg')}
                             style={styles.image} /> */}
                     <ImageSwiper imageWidth={styles.image.width} imageHeight={styles.image.height}
-                        style={styles.image} />
+                        style={styles.image} source={this.props.item.portraits} />
                 </View>
                 <TouchableWithoutFeedback onPress={this.handlePress}>
                     <View style={{ alignItems: "stretch", margin: 5, flex: 1 }}>
@@ -32,9 +32,7 @@ class PlaceItem extends Component {
                             <Label backgroundColor="#FEDFE1" textColor="#E16B8C"
                                 text={this.props.item.introduction} />
                             <Label backgroundColor="#FEDFE1" textColor="#E16B8C"
-                                text={this.props.item.introduction} />
-                            <Label backgroundColor="#FEDFE1" textColor="#E16B8C"
-                                text={this.props.item.introduction} />
+                                text={'距离'+this.props.item.distance+'米'} />
                         </View>
                     </View>
                 </TouchableWithoutFeedback>
@@ -67,15 +65,9 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 20,
         alignItems: "stretch", margin: 5
     },
-    image: Global.personInfo.personType===personType.staff?
+    image:
     {
         width: Global.gScreen.screen_width - 20 - 20 - 14,
-        height: Global.gScreen.screen_height * 0.5 * 0.6,
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
-    }:
-    {
-        width: Global.gScreen.screen_width*0.7 - 20 - 20 - 14,
         height: Global.gScreen.screen_height * 0.5 * 0.6,
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,

@@ -9,18 +9,20 @@ class PersonListScreen extends Component {
         super(props);
         this.state = {
             attendees: [],
+            isHistory:false,
         }
     }
 
     componentWillMount() {
         let attendees = this.props.navigation.getParam("attendees", []);
-        this.setState({ attendees });
+        let isHistory=this.props.navigation.getParam("isHistory",false);
+        this.setState({ attendees,isHistory });
     }
 
     _keyExtractor = (item, index) => item.personId.toLocaleString();
 
     _renderItem = ({ item }) => (
-        <PersonItem data={item} />
+        <PersonItem data={item} history={this.state.isHistory} />
     );
     render() {
         return (

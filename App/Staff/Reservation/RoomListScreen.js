@@ -13,12 +13,13 @@ class RoomListScreen extends Component {
         }
     }
     static navigationOptions = {
-        header: null,  //隐藏顶部导航栏
+        // header: null,  //隐藏顶部导航栏
     };
 
     //进入会议室详情页面
     getDetail = (id,type) => {
         let data={...this.props.navigation.getParam("data",{}),type:type};
+        console.log("会议室id:"+id+"   data:"+JSON.stringify(data));
         this.props.navigation.push("RoomDetail", { id: id,data:data });
     }
 

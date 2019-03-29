@@ -12,6 +12,8 @@ import NoInternetScreen from '../../NoInternetScreen';
 import Toast from "react-native-easy-toast";
 import Global from "../../../Global";
 import { Geolocation } from "react-native-amap-geolocation";
+import Modal from "react-native-modal";
+import Spinner from "react-native-spinkit";
 
 class InputInfoScreen extends Component {
     constructor(props) {
@@ -34,6 +36,7 @@ class InputInfoScreen extends Component {
             isGetting: false,
             latitude: null,
             longitude: null,
+            isModalVisible: false,
         };
     }
     static navigationOptions = ({ navigation }) => {
@@ -55,13 +58,25 @@ class InputInfoScreen extends Component {
 
 
     componentWillMount() {
+        
+       
         Geolocation.init({
             android: "49af4bf771f819910e67eb9f62a2e090"
         });
     }
 
     componentDidMount() {
-        if (!Global.personInfo.isIdentified) {
+        let month=new Date().getMonth() + 1;
+        let day=new Date().getDate();
+        if(month/10<1){
+            month="0"+month;
+        }
+        if(day/10<1){
+            day="0"+day;
+        } 
+        let date=new Date().getFullYear() + "-" + month + "-" + day;//预约日期
+        this.setState({date});
+        if (!Global.personInfo.identified) {
             Alert.alert("你还没有完成人脸认证", "是否现在就进行", [
                 {
                     text: '我不要',
@@ -69,7 +84,9 @@ class InputInfoScreen extends Component {
                 {
                     text: '马上就去',
                     onPress: () => {
-                        this.props.navigation.push("FaceCognition")
+                        this.props.navigation.navigate("FaceVerify", {
+                            toast: this.toast,
+                        });
                     }
                 },
             ])
@@ -86,6 +103,10 @@ class InputInfoScreen extends Component {
         Geolocation.start();
     }
 
+
+    toast = (info) => {
+        this.refs.toast.show(info);
+    }
     componentWillUnmount() {
         Geolocation.stop()
     }
@@ -101,234 +122,190 @@ class InputInfoScreen extends Component {
 
     onSelectDate = (year, month, day) => {
         let date = new Date(year, month, day);
-        date = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+        console.log(date);
+        if (date.getTime() < new Date().getTime()) {
+            this.toast("不能选择今天之前的日期哦");
+            date = new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate();
+            console.log(date);
+        } else {
+            let month=date.getMonth() + 1;
+            let day=date.getDate();
+            if(month/10<1){
+                month="0"+month;
+            }
+            if(day/10<1){
+                day="0"+day;
+            }
+            date = date.getFullYear() + "-" + month + "-" + day;
+            console.log(date);
+        }
         this.setState({ date });
     }
 
     onSelectStartTime = (hour, minute) => {
-        let time = hour + ":" + minute;
-        this.setState({ starttime: time, startHour: hour, startMinute: minute });
+        this.setState({ startHour: hour, startMinute: minute })
         let { endHour, endMinute } = this.state;
         if (endHour != 0) {
             let duration = endHour * 60 + endMinute - hour * 60 - minute;
             this.setState({ duration });
         }
+        if (minute / 10 < 1) {
+            minute = "0" + minute;
+        }
+        if (hour / 10 < 1) {
+            hour = "0" + hour;
+        }
+        let time = hour + ":" + minute + ":00";
+        this.setState({ starttime: time });
+
     }
 
     onSelectEndTime = (hour, minute) => {
-        let time = hour + ":" + minute;
-        this.setState({ endtime: time, endHour: hour, endMinute: minute });
+        this.setState({ endHour: hour, endMinute: minute });
         let { startHour, startMinute } = this.state;
         if (startHour != 0) {
             let duration = hour * 60 + minute - startHour * 60 - startMinute;
             this.setState({ duration });
         }
+        if (minute / 10 < 1) {
+            minute = "0" + minute;
+        }
+        if (hour / 10 < 1) {
+            hour = "0" + hour;
+        }
+        let time = hour + ":" + minute + ":00";
+        this.setState({ endtime: time });
+
     }
 
 
     makeReser = () => {
-        this.setState({ isGetting: true });
+        // this.setState({ isGetting: true });
+        this._toggleModal();
         let { starttime, endtime, date, duration, capacity, latitude, longitude } = this.state;
-        let data = { starttime, endtime, date, duration, capacity, latitude, longitude };
+        starttime = date + " " + starttime;
+        endtime = date + " " + endtime;
+        latitude = latitude + "";
+        longitude = longitude + "";
+        
+        capacity = parseInt(capacity)
+        let data = { companyId: Global.personInfo.companyId, starttime, endtime, duration, capacity, longitude, latitude };
+        console.log(JSON.stringify(data));
+        let formData = new FormData();
+        for (var key in data) {
+            formData.append(key, data[key]);
+        }
+        Geolocation.stop();
         let opts = {
-            method: "POST",   //请求方法
-            body: data,   //请求体
+            method: 'POST',
             headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
+                Accept: 'application/json;charset=utf-8',
+                'Content-Type': 'multipart/form-data;charset=utf-8',
             },
+            body: formData,
         };
+        console.log(url.getPlaceListStaff());
         fetch(url.getPlaceListStaff(), opts).then((response) => response.json())
             .then((responseJson) => {
+                console.log(responseJson);
+                this._toggleModal();
                 if (responseJson.status === 200) {
-                    this.setState({ isGetting: false });
                     let best = responseJson.data[0].recommends;
                     let standby = responseJson.data[1].recommends;
-                    let outside=responseJson.data[3].recommends;
-                    starttime = date + " " + starttime;
-                    endtime = date + " " + endtime;
+                    let outside = responseJson.data[2].recommends;
                     let dat = { starttime, endtime, duration, capacity };
                     this.props.navigation.push("RoomList", {
                         best: best,
                         standby: standby,
-                        outside:outside,
+                        outside: outside,
                         data: dat,
                     })
+                } else {
+                    this.refs.toast.show(responseJson.msg);
                 }
-            }).catch((error) => this.refs.toast.show("哦哦网络在躲猫猫欸"))
+            }).catch((error) => {
+                this.refs.toast.show("哦哦网络在躲猫猫欸")
+                console.log(error);
+            })
     }
+    _toggleModal = () => this.setState({ isModalVisible: !this.state.isModalVisible });
 
     nextPage = () => {
         // this.makeReser();
-        this.setState({ isGetting: true });
+        // this._toggleModal();
+        
+        Geolocation.stop()
         let { starttime, endtime, date, duration, capacity } = this.state;
-        let best = [
-            {
-                id: 1,
-                name: '学堂',
-                address: '书院后山啊手动阀手动阀撒旦发射点发撒地方撒旦',
-                introduction: '不能毁坏书桌',
-                device: "书桌",
-                instruction: null,
-                capacity: 20,
-                type: "A",
-            },
-            {
-                id: 2,
-                name: '教堂',
-                address: '书院后山',
-                introduction: '不能毁坏书桌',
-                device: "书桌",
-                instruction: null,
-                capacity: 20,
-                type: "B"
-            },
-            {
-                id: 3,
-                name: '去堂',
-                address: '书院后山',
-                introduction: '不能毁坏书桌',
-                device: "书桌",
-                instruction: null,
-                capacity: 20,
-                type: "B"
-            },
-            {
-                id: 4,
-                name: '他堂',
-                address: '书院后山',
-                introduction: '不能毁坏书桌',
-                device: "书桌",
-                instruction: null,
-                capacity: 20,
-                type: "B"
-            },
-        ];
-        let standby = [
-            {
-                id: 1,
-                name: '学堂',
-                address: '书院后山啊手动阀手动阀撒旦发射点发撒地方撒旦',
-                introduction: '不能毁坏书桌',
-                device: "书桌",
-                instruction: null,
-                capacity: 20,
-                type: "A",
-            },
-            {
-                id: 2,
-                name: '教堂',
-                address: '书院后山',
-                introduction: '不能毁坏书桌',
-                device: "书桌",
-                instruction: null,
-                capacity: 20,
-                type: "B"
-            },
-            {
-                id: 3,
-                name: '去堂',
-                address: '书院后山',
-                introduction: '不能毁坏书桌',
-                device: "书桌",
-                instruction: null,
-                capacity: 20,
-                type: "B"
-            },
-            {
-                id: 4,
-                name: '他堂',
-                address: '书院后山',
-                introduction: '不能毁坏书桌',
-                device: "书桌",
-                instruction: null,
-                capacity: 20,
-                type: "B"
-            },
-        ];
-        let outside = [
-            {
-                id: 1,
-                name: '学堂',
-                address: '书院后山啊手动阀手动阀撒旦发射点发撒地方撒旦',
-                introduction: '不能毁坏书桌',
-                device: "书桌",
-                instruction: null,
-                capacity: 20,
-                type: "A",
-            },
-            {
-                id: 2,
-                name: '教堂',
-                address: '书院后山',
-                introduction: '不能毁坏书桌',
-                device: "书桌",
-                instruction: null,
-                capacity: 20,
-                type: "B"
-            },
-            {
-                id: 3,
-                name: '去堂',
-                address: '书院后山',
-                introduction: '不能毁坏书桌',
-                device: "书桌",
-                instruction: null,
-                capacity: 20,
-                type: "B"
-            },
-            {
-                id: 4,
-                name: '他堂',
-                address: '书院后山',
-                introduction: '不能毁坏书桌',
-                device: "书桌",
-                instruction: null,
-                capacity: 20,
-                type: "B"
-            },
-        ];
+        let r = /^\+?[1-9][0-9]*$/;　　//正整数
+        if(!r.test(capacity)){
+            this.toast("与会人数必须是正整数哦");
+            return;
+        }
+        if(starttime.length===0||endtime.length===0){
+            this.toast("时间是必须的");
+            return;
+        }
+        
+        let best = Global.best;
+        let standby = [];
+        let outside = [];
         starttime = date + " " + starttime;
         endtime = date + " " + endtime;
+        let reg=new RegExp("-","gm");
+        let start=starttime.replace(reg,"/");
+        let end=endtime.replace(reg,"/");
+        if(new Date().getTime()>new Date(start).getTime()-30*60*1000){
+            this.toast("预约时间不能为当前时间的30分钟前");
+            return;
+        }
+        if(new Date(start).getTime()>=new Date(end).getTime()){
+            this.toast("会议结束时间不能早于会议开始时间");
+            return;
+        }
+        console.log(starttime);
         let dat = { starttime, endtime, duration, capacity };
-        this.setState({ isGetting: false });
-        this.props.navigation.push("RoomList", {
-            best: best,
-            standby: standby,
-            outside:outside,
-            data: dat,
-        });
+        console.log(dat);
+        this._toggleModal();
+        this.timer=setTimeout(() => {
+            this._toggleModal();
+            this.props.navigation.push("RoomList", {
+                best: best,
+                standby: standby,
+                outside: outside,
+                data: dat,
+            });
+        }, 500);
+        
     }
 
     render() {
         return (
             <View style={{ flex: 1 }}>
-                {this.isGetting ? <Loading />
-                    : <View style={Styles.appDefault}>
-                        <View style={{ flex: 1, justifyContent: "flex-start", alignItems: "center" }} />
-                        <View style={{ flex: 8, alignItems: "stretch", justifyContent: "center" }}>
-                            <Text style={{ fontSize: 20, margin: 10, fontWeight: "bold", color: "#376B6D" }}>会议日期</Text>
-                            <DatePicker onSelect={this.onSelectDate} />
-                            <View style={{ flexDirection: "row" }}>
-                                <View style={{ flex: 1, alignItems: "stretch" }}>
-                                    <TimePicker text="开始时间" onSelect={this.onSelectStartTime} />
-                                </View>
-                                <View style={{ flex: 1, alignItems: "stretch" }}>
-                                    <TimePicker text="结束时间" onSelect={this.onSelectEndTime} />
-                                </View>
+                <View style={Styles.appDefault}>
+                    <View style={{ flex: 1, justifyContent: "flex-start", alignItems: "center" }} />
+                    <View style={{ flex: 8, alignItems: "stretch", justifyContent: "center" }}>
+                        <Text style={{ fontSize: 20, margin: 10, fontWeight: "bold", color: "#376B6D" }}>会议日期</Text>
+                        <DatePicker onSelect={this.onSelectDate} date={this.state.date} />
+                        <View style={{ flexDirection: "row" }}>
+                            <View style={{ flex: 1, alignItems: "stretch" }}>
+                                <TimePicker text="开始时间" onSelect={this.onSelectStartTime} />
                             </View>
-                            <TextInput style={styles.input} placeholder="与会人数" placeholderTextColor="#a5a5a5"
-                                onChangeText={(capacity) => this.setState({ capacity })} keyboardType="number-pad" />
-                            {this.state.isResult ?
-                                <ButtonLoading background={{ ...Styles.appButtonContainer }}
-                                    style={{ ...Styles.appButtonText }}
-                                />
-                                : <Button title="预约" onPress={this.nextPage}
-                                    textStyle={{ ...Styles.appButtonText }}
-                                    background={{ ...Styles.appButtonContainer }} />}
-                        </View >
-                        <View style={{ flex: 1 }} />
-                    </View >}
+                            <View style={{ flex: 1, alignItems: "stretch" }}>
+                                <TimePicker text="结束时间" onSelect={this.onSelectEndTime} />
+                            </View>
+                        </View>
+                        <TextInput style={styles.input} placeholder="与会人数" placeholderTextColor="#a5a5a5"
+                            onChangeText={(capacity) => this.setState({ capacity })} keyboardType="number-pad" />
+                        {this.state.isResult ?
+                            <ButtonLoading background={{ ...Styles.appButtonContainer }}
+                                style={{ ...Styles.appButtonText }}
+                            />
+                            : <Button title="预约" onPress={this.nextPage}
+                                textStyle={{ ...Styles.appButtonText }}
+                                background={{ ...Styles.appButtonContainer }} />}
+                    </View >
+                    <View style={{ flex: 1 }} />
+                </View >
                 <Toast
                     ref="toast"
                     style={styles.toast}
@@ -337,11 +314,29 @@ class InputInfoScreen extends Component {
                     fadeOutDuration={1000}
                     textStyle={{ color: "white", fontSize: 20, fontWeight: "bold" }}
                 />
+                <Modal isVisible={this.state.isModalVisible}>
+                    <View style={{ flex: 1 }}>
+                        <Spinner style={styles.spinner}
+                            size={Global.gScreen.screen_width*0.4} type={"9CubeGrid"}
+                            color={"#376B6D"} />
+                    </View>
+                </Modal>
             </View>
         )
     };
 }
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#FAFAFA',
+    },
+    spinner: {
+        position: "absolute",
+        top: Global.gScreen.screen_height * 0.3,
+        left: Global.gScreen.screen_width * 0.25,
+    },
     input: {
         margin: 5,
         backgroundColor: 'white',

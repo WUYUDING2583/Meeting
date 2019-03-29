@@ -12,14 +12,17 @@ import HistoryPersonScreen from "../App/HistoryPersonScreen";
 import NoInternetScreen from "../App/NoInternetScreen";
 import MessageScreen from "../App/MessageScreen";
 import GroupStack from "./AppTabStack/GroupStack";
-import MessageStack from "./AppTabStack/MessageStack";
+import FaceVerifyScreen from "../App/FaceVerifyScreen";
+import MyGroupDetailScreen from "../App/Group/MyGroupDetailScreen";
+import AlterPswScreen from "../App/AlterPswScreen";
+import MyAppointmentScreen from "../App/MyAppointmentScreen";
+import InviteScreen from "../App/InviteScreen";
 
 const tabName = {
     Meeting: "会议",
     Mine: "我的",
     Reservation: "预约",
     Group:"群组",
-    Message:"通知",
 }
 const HomeIconWithBadge = props => {
     // return <IconWithBadge {...props} badgeCount={3} />;
@@ -31,7 +34,6 @@ const RootTabStack = createBottomTabNavigator(
         预约: ReservationStack,
         会议: Meeting,
         群组: GroupStack,
-        通知: MessageStack,
         我的: MineScreen,
     },
     {
@@ -46,9 +48,6 @@ const RootTabStack = createBottomTabNavigator(
                     iconName = "md-person";
                 } else if (routeName === tabName.Reservation) {
                     iconName = 'ios-search';
-                }else if (routeName === tabName.Message) {
-                    iconName = 'ios-mail';
-                    IconComponent = HomeIconWithBadge;
                 }else if (routeName === tabName.Group) {
                     iconName = 'md-people';
                 }
@@ -82,6 +81,21 @@ const TabNavigator_Staff = createStackNavigator({
     },
     Message: {
         screen: MessageScreen,
+    },
+    FaceVerify:{
+        screen:FaceVerifyScreen,
+    },
+    MyGroupDetail:{
+        screen:MyGroupDetailScreen,
+    },
+    AlterPsw:{
+        screen:AlterPswScreen,
+    },
+    MyAppointment:{
+        screen:MyAppointmentScreen,
+    },
+    Invite:{
+        screen:InviteScreen,
     }
 },
     {

@@ -6,7 +6,8 @@ import { RNCamera, FaceDetector } from "react-native-camera";
 import Global, { personType } from "../Global";
 import url from "../url";
 
-class FaceCognitionLoginScreen extends Component {
+//需要调用sdk通过照片传送
+class FaceVerifyScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -23,16 +24,7 @@ class FaceCognitionLoginScreen extends Component {
     }
 
     faceVerify = (faceInfo) => {
-        let personInfo = {
-            id: 1,
-            name: '付初露',
-            sex: '女',
-            companyId: 1,
-            identity: 'staff',
-            identified: true,
-            personType: 1
-        }
-        Global.personInfo=personInfo;
+        Global.personInfo.identified=true;
         Global.storage.save({
             key: 'personInfo',  // 注意:请不要在key中使用_下划线符号!
             data: Global.personInfo,
@@ -40,12 +32,15 @@ class FaceCognitionLoginScreen extends Component {
             // 如果设为null，则永不过期
             expires: 1000 * 3600 * 24 * 7
         });
-        this.props.navigation.navigate("App");
-        // let formData =new FormData();// 把图片放入formData中,采用formData来实现
+        this.props.navigation.state.params.toast("人脸认证成功");
+        this.props.navigation.goBack();
+      
 
+        // let formData = new FormData();// 把图片放入formData中,采用formData来实现
 
+       
         // let params = { personId: Global.personInfo.id };
-        // let file = {uri: faceInfo, type: 'multipart/form-data ', name: 'image.jpg'};
+        // let file = { uri: faceInfo, type: 'multipart/form-data ', name: 'image.jpg' };
         // formData.append("faceInfo", file);
         // if (Global.personInfo.personType === personType.staff) {
         //     params = { ...params, from: "staff" };
@@ -53,7 +48,7 @@ class FaceCognitionLoginScreen extends Component {
         //     params = { ...params, from: "visitor" };
         // }
         // console.log(params);
-        // for (var key in params){
+        // for (var key in params) {
         //     formData.append(key, params[key]);
         // }
 
@@ -101,6 +96,23 @@ class FaceCognitionLoginScreen extends Component {
     }
 
 
+    // //开始录像
+    // takeRecord = async (camera) => {
+    //     this.setState({ isRecording: true });
+    //     let options = {
+    //         quality: RNCamera.Constants.VideoQuality["720p"],
+    //         maxDuration: 3,
+    //     };
+    //     let data = await this.camera.recordAsync(options);
+    //     // alert(data.uri);
+    //     this.setState({ data: data });
+    //     console.log(data);
+    // };
+    // //停止录像
+    // stopRecord = (camera) => {
+    //     this.camera.stopRecording();
+    //     this.setState({ isRecording: false });
+    // }
     componentDidMount() {
         this.timer = setTimeout(() => {
             this.takePicture();
@@ -151,4 +163,4 @@ class FaceCognitionLoginScreen extends Component {
 }
 
 
-export default FaceCognitionLoginScreen;
+export default FaceVerifyScreen;

@@ -18,6 +18,17 @@ export default class Example extends Component {
         this.notif = new NotifService(this.onRegister.bind(this), this.onNotif.bind(this));
     }
 
+    setMessagePut = () => {
+        let date1 = "2019/03/18 14:8";
+        let date= "2019-03-18 6:18";
+        let reg=new RegExp("-",'gm');
+        let date2=date.replace(reg,"/"); 
+        let timestamp1 = +new Date();
+        let timestamp2 = Date.parse(new Date(date2));
+        let difference=(timestamp1-timestamp2)/1000;
+        console.log("now:" + timestamp1 + "\n2019-03-18 13:15:" + timestamp2);
+        console.log(difference);
+    }
     render() {
         return (
             <View style={styles.container}>

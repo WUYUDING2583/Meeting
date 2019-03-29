@@ -8,8 +8,6 @@ class ImageSwiper extends Component {
         this.state = {
             images: [
                 './weather.jpg',
-                './weather.jpg',
-                './weather.jpg'
             ],
             pageIndex: 0,
             width: this.props.imageWidth,
@@ -17,6 +15,12 @@ class ImageSwiper extends Component {
         }
     }
 
+    componentWillMount(){
+        let images=this.props.source===undefined?[]:this.props.source;
+        if(images.length>0){
+            this.setState({images});
+        }
+    }
     slide = (e) => {
         let offset = e.nativeEvent.contentOffset.x;           //获取x偏移量
         let DevWidth = this.state.width;
@@ -68,7 +72,7 @@ class ImageSwiper extends Component {
                     {images.map((item, index) => {
                         return (
                             <Image key={index} style={{ width: this.state.width, height: this.state.imageHeight, ...this.props.style }}
-                                source={require('./weather.jpg')} />
+                                source={this.props.source} />
                         )
                     })}
                 </ScrollView>

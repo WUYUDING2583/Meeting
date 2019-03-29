@@ -32,24 +32,35 @@ class InstitutionPswScreen extends Component {
     handleSubmit = () => {
         this.setState({ isSubmit: true });
         let { institution, jobnum, pswd } = this.state;
-        let opts = {
-            method: "GET"
-        }
-        let URL = url.staffLogin(jobnum, pswd, institution);
+        Global.personInfo= {
+            id: 1,
+            name: '付初露',
+            sex: '女',
+            companyId: 1,
+            identity: 'staff',
+            identified: false,
+            personType: 1
+        };
+        this.props.navigation.navigate("App");
+        // let opts = {
+        //     method: "GET"
+        // }
+        // let URL = url.staffLogin(institution,jobnum, pswd);
+        // console.log(URL);
         // fetch(URL, opts).then((response) => response.json())
         //     .then((responseJson) => {
-        //         let t = "asdf";
-        //         t.localeCompare()
         //         if (responseJson.status === 200) {
-        //             if (responseJson.result.localeCompare("success")) {
-        //                 Global.personInfo = { ...responseJson.data, personType: personType.staff };
-        // Global.storage.save({
-        //     key: 'personInfo',  // 注意:请不要在key中使用_下划线符号!
-        //     data: { ...responseJson.data, personType: personType.staff },
-        //     // 如果不指定过期时间，则会使用defaultExpires参数
-        //     // 如果设为null，则永不过期
-        //     expires: 1000 * 3600 * 24 * 7
-        // });
+        //             if (responseJson.result.localeCompare("success")===0) {
+        //                 Global.personInfo = { ...responseJson.data, personType: personType.staff }
+        //                 Global.personInfo.identified=false;
+        //                 Global.storage.save({
+        //                     key: 'personInfo',  // 注意:请不要在key中使用_下划线符号!
+        //                     data: Global.personInfo,
+        //                     // 如果不指定过期时间，则会使用defaultExpires参数
+        //                     // 如果设为null，则永不过期
+        //                     expires: 1000 * 3600 * 24 * 7
+        //                 });
+        //                 console.log(Global.personInfo);
         //                 this.setState({ isSubmit: false });
         //                 this.props.navigation.navigate("App");
         //             } else {
@@ -61,23 +72,6 @@ class InstitutionPswScreen extends Component {
         //         this.refs.toast.show("网络似乎在躲猫猫欸");
         //         this.setState({ isSubmit: false });
         //     });
-        let data = {
-            companyId: 1,//游客无此属性
-            id: 1,
-            name: "吴宇丁",
-            sex: "男",
-            isIdentified: false,
-            personType: personType.staff,
-            portrait: null,
-        };
-        Global.personInfo = data;
-        Global.storage.save({
-            key: 'personInfo',  // 注意:请不要在key中使用_下划线符号!
-            data: data,
-            expires: 1000 * 3600 * 24 * 7
-        });
-
-        this.props.navigation.navigate("App");
     }
     render() {
         return (
